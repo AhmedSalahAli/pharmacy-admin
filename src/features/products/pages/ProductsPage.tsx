@@ -1,23 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import CreateProductForm from '../components/CreateProductForm';
 import type { Product, CreateProductInput } from '../types/product';
 
 function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: 'Panadol Extra',
-      price: 35.5,
-      quantity: 100,
-    },
-    {
-      id: 2,
-      name: 'Brufen 400mg',
-      price: 48.75,
-      quantity: 50,
-    },
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const initialProducts: Product[] = [
+      {
+        id: 1,
+        name: 'Panadol Extra',
+        price: 35.5,
+        quantity: 100,
+      },
+      {
+        id: 2,
+        name: 'Brufen 400mg',
+        price: 48.75,
+        quantity: 50,
+      },
+    ];
+
+    setProducts(initialProducts);
+    setIsLoading(false);
+  }, []);
 
   function addProduct(productInput: CreateProductInput) {
     const newProduct: Product = {
@@ -62,7 +70,9 @@ function ProductsPage() {
 
       <h3>Products List</h3>
 
-      {products.length === 0 ? (
+      {isLoading ? (
+        <p>Loading products...</p>
+      ) : products.length === 0 ? (
         <p>No products found</p>
       ) : (
         products.map((product) => (
@@ -76,7 +86,6 @@ function ProductsPage() {
           />
         ))
       )}
-
     </div>
   );
 }
