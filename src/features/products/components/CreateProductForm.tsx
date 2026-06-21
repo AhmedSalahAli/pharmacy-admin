@@ -7,6 +7,7 @@ type CreateProductFormProps = {
 
 function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
   const [name, setName] = useState('');
+  const [barcode, setBarcode] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,6 +15,11 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
   function handleSubmit() {
     if (name.trim().length === 0) {
       setErrorMessage('Product name is required');
+      return;
+    }
+
+    if (barcode.trim().length === 0) {
+      setErrorMessage('Barcode is required');
       return;
     }
 
@@ -29,6 +35,7 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
 
     const newProduct: CreateProductInput = {
       name,
+      barcode,
       price: Number(price),
       quantity: Number(quantity),
     };
@@ -36,6 +43,7 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
     onAddProduct(newProduct);
 
     setName('');
+    setBarcode('');
     setPrice('');
     setQuantity('');
     setErrorMessage('');
@@ -51,6 +59,12 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
         placeholder="Product name"
         value={name}
         onChange={(event) => setName(event.target.value)}
+      />
+
+      <input
+        placeholder="Barcode"
+        value={barcode}
+        onChange={(event) => setBarcode(event.target.value)}
       />
 
       <input

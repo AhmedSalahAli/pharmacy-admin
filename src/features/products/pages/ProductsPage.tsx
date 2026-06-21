@@ -2,43 +2,36 @@ import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import CreateProductForm from '../components/CreateProductForm';
 import type { Product, CreateProductInput } from '../types/product';
+import {
+  getProducts,
+  createProduct,
+  deleteProductById,
+} from '../api/productsApi';
 
 function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const initialProducts: Product[] = [
-      {
-        id: 1,
-        name: 'Panadol Extra',
-        price: 35.5,
-        quantity: 100,
-      },
-      {
-        id: 2,
-        name: 'Brufen 400mg',
-        price: 48.75,
-        quantity: 50,
-      },
-    ];
+    async function loadProducts() {
+      const productsResponse = await getProducts();
 
-    setProducts(initialProducts);
-    setIsLoading(false);
+      setProducts(productsResponse);
+      setIsLoading(false);
+    }
+
+    loadProducts();
   }, []);
 
-  function addProduct(productInput: CreateProductInput) {
-    const newProduct: Product = {
-      id: Date.now(),
-      name: productInput.name,
-      price: productInput.price,
-      quantity: productInput.quantity,
-    };
+  async function addProduct(productInput: CreateProductInput) {
+    const newProduct = await createProduct(productInput);
 
     setProducts([...products, newProduct]);
   }
 
-  function deleteProduct(id: number) {
+  async function deleteProduct(id: number) {
+    await deleteProductById(id);
+
     const filteredProducts = products.filter((product) => product.id !== id);
 
     setProducts(filteredProducts);
@@ -80,8 +73,11 @@ function ProductsPage() {
             key={product.id}
             id={product.id}
             name={product.name}
+            barcode={product.barcode}
             price={product.price}
             quantity={product.quantity}
+            supplierName={product.supplier?.name}
+            isAvailable={product.isAvailable}
             onDelete={deleteProduct}
           />
         ))
