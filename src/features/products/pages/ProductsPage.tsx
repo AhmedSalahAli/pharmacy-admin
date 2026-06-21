@@ -1,7 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+
 import ProductCard from '../components/ProductCard';
 import CreateProductForm from '../components/CreateProductForm';
-import type { Product, CreateProductInput } from '../types/product';
+import type { CreateProductInput } from '../types/product';
 import {
   getProducts,
   createProduct,
@@ -9,57 +15,51 @@ import {
 } from '../api/productsApi';
 
 function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        setIsLoading(true);
-        setErrorMessage('');
+  const queryClient = useQueryClient();
 
-        const productsResponse = await getProducts();
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  });
 
-        setProducts(productsResponse);
-      } catch (error) {
-        setErrorMessage('Failed to load products');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadProducts();
-  }, []);
-
-  async function addProduct(productInput: CreateProductInput) {
-    try {
-      setIsCreating(true);
-      setErrorMessage('');
-
-      const newProduct = await createProduct(productInput);
-
-      setProducts([...products, newProduct]);
-    } catch (error) {
+  const createProductMutation = useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['products'],
+      });
+    },
+    onError: () => {
       setErrorMessage('Failed to create product');
-    } finally {
-      setIsCreating(false);
-    }
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProductById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['products'],
+      });
+    },
+    onError: () => {
+      setErrorMessage('Failed to delete product');
+    },
+  });
+
+  function addProduct(productInput: CreateProductInput) {
+    setErrorMessage('');
+    createProductMutation.mutate(productInput);
   }
 
-  async function deleteProduct(id: number) {
-    try {
-      setErrorMessage('');
-
-      await deleteProductById(id);
-
-      const filteredProducts = products.filter((product) => product.id !== id);
-
-      setProducts(filteredProducts);
-    } catch (error) {
-      setErrorMessage('Failed to delete product');
-    }
+  function deleteProduct(id: number) {
+    setErrorMessage('');
+    deleteProductMutation.mutate(id);
   }
 
   const totalProducts = products.length;
@@ -77,6 +77,7 @@ function ProductsPage() {
       <h2>Products</h2>
 
       {errorMessage && <p>{errorMessage}</p>}
+      {isError && <p>Failed to load products</p>}
 
       <div>
         <p>Total products: {totalProducts}</p>
@@ -86,7 +87,7 @@ function ProductsPage() {
 
       <CreateProductForm
         onAddProduct={addProduct}
-        isSubmitting={isCreating}
+        isSubmitting={createProductMutation.isPending}
       />
 
       <hr />
