@@ -25,5 +25,6 @@ export type CreateProductInput = {
   barcode: string;
   price: number;
   quantity: number;
+  isAvailable: boolean;
   supplierId?: number;
 };

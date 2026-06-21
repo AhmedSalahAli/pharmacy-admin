@@ -38,6 +38,7 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
       barcode,
       price: Number(price),
       quantity: Number(quantity),
+      isAvailable: true,
     };
 
     onAddProduct(newProduct);
