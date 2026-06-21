@@ -36,9 +36,25 @@ function ProductsPage() {
     setProducts(filteredProducts);
   }
 
+  const totalProducts = products.length;
+
+  const totalQuantity = products.reduce((sum, product) => {
+    return sum + product.quantity;
+  }, 0);
+
+  const totalInventoryValue = products.reduce((sum, product) => {
+    return sum + product.price * product.quantity;
+  }, 0);
+
   return (
     <div>
       <h2>Products</h2>
+
+      <div>
+        <p>Total products: {totalProducts}</p>
+        <p>Total quantity: {totalQuantity}</p>
+        <p>Total inventory value: {totalInventoryValue} EGP</p>
+      </div>
 
       <CreateProductForm onAddProduct={addProduct} />
 
