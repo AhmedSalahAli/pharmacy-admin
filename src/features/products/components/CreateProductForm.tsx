@@ -3,9 +3,10 @@ import type { CreateProductInput } from '../types/product';
 
 type CreateProductFormProps = {
   onAddProduct: (product: CreateProductInput) => void;
+  isSubmitting: boolean;
 };
 
-function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
+function CreateProductForm({ onAddProduct, isSubmitting }: CreateProductFormProps) {
   const [name, setName] = useState('');
   const [barcode, setBarcode] = useState('');
   const [price, setPrice] = useState('');
@@ -80,7 +81,9 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
         onChange={(event) => setQuantity(event.target.value)}
       />
 
-      <button onClick={handleSubmit}>Add Product</button>
+      <button onClick={handleSubmit} disabled={isSubmitting}>
+        {isSubmitting ? 'Adding...' : 'Add Product'}
+      </button>
     </div>
   );
 }

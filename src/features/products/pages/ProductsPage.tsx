@@ -11,30 +11,55 @@ import {
 function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function loadProducts() {
-      const productsResponse = await getProducts();
+      try {
+        setIsLoading(true);
+        setErrorMessage('');
 
-      setProducts(productsResponse);
-      setIsLoading(false);
+        const productsResponse = await getProducts();
+
+        setProducts(productsResponse);
+      } catch (error) {
+        setErrorMessage('Failed to load products');
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     loadProducts();
   }, []);
 
   async function addProduct(productInput: CreateProductInput) {
-    const newProduct = await createProduct(productInput);
+    try {
+      setIsCreating(true);
+      setErrorMessage('');
 
-    setProducts([...products, newProduct]);
+      const newProduct = await createProduct(productInput);
+
+      setProducts([...products, newProduct]);
+    } catch (error) {
+      setErrorMessage('Failed to create product');
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   async function deleteProduct(id: number) {
-    await deleteProductById(id);
+    try {
+      setErrorMessage('');
 
-    const filteredProducts = products.filter((product) => product.id !== id);
+      await deleteProductById(id);
 
-    setProducts(filteredProducts);
+      const filteredProducts = products.filter((product) => product.id !== id);
+
+      setProducts(filteredProducts);
+    } catch (error) {
+      setErrorMessage('Failed to delete product');
+    }
   }
 
   const totalProducts = products.length;
@@ -51,13 +76,18 @@ function ProductsPage() {
     <div>
       <h2>Products</h2>
 
+      {errorMessage && <p>{errorMessage}</p>}
+
       <div>
         <p>Total products: {totalProducts}</p>
         <p>Total quantity: {totalQuantity}</p>
         <p>Total inventory value: {totalInventoryValue} EGP</p>
       </div>
 
-      <CreateProductForm onAddProduct={addProduct} />
+      <CreateProductForm
+        onAddProduct={addProduct}
+        isSubmitting={isCreating}
+      />
 
       <hr />
 
