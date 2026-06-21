@@ -46,16 +46,21 @@ function ProductsPage() {
 
       <h3>Products List</h3>
 
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          id={product.id}
-          name={product.name}
-          price={product.price}
-          quantity={product.quantity}
-          onDelete={deleteProduct}
-        />
-      ))}
+      {products.length === 0 ? (
+        <p>No products found</p>
+      ) : (
+        products.map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            price={product.price}
+            quantity={product.quantity}
+            onDelete={deleteProduct}
+          />
+        ))
+      )}
+
     </div>
   );
 }

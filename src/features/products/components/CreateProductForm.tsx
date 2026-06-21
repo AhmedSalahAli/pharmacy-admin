@@ -9,8 +9,24 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   function handleSubmit() {
+    if (name.trim().length === 0) {
+      setErrorMessage('Product name is required');
+      return;
+    }
+
+    if (Number(price) <= 0) {
+      setErrorMessage('Price must be greater than 0');
+      return;
+    }
+
+    if (Number(quantity) < 0) {
+      setErrorMessage('Quantity cannot be negative');
+      return;
+    }
+
     const newProduct: CreateProductInput = {
       name,
       price: Number(price),
@@ -22,11 +38,14 @@ function CreateProductForm({ onAddProduct }: CreateProductFormProps) {
     setName('');
     setPrice('');
     setQuantity('');
+    setErrorMessage('');
   }
 
   return (
     <div>
       <h2>Add Product</h2>
+
+      {errorMessage && <p>{errorMessage}</p>}
 
       <input
         placeholder="Product name"
