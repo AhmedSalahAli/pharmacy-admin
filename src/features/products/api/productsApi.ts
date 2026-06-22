@@ -1,4 +1,8 @@
-import type { Product, CreateProductInput } from '../types/product';
+import type {
+  Product,
+  CreateProductInput,
+  UpdateProductInput,
+} from '../types/product';
 
 const API_BASE_URL = 'http://localhost:3000';
 
@@ -59,4 +63,23 @@ export async function deleteProductById(id: number): Promise<void> {
     if (!response.ok) {
         await handleError(response);
     }
+}
+
+export async function updateProduct(
+  id: number,
+  productInput: UpdateProductInput,
+): Promise<Product> {
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(productInput),
+  });
+
+  if (!response.ok) {
+    await handleError(response);
+  }
+
+  return response.json();
 }

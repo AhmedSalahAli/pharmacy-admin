@@ -6,6 +6,7 @@ type ProductCardProps = {
   quantity: number;
   supplierName?: string;
   isAvailable: boolean;
+  onEdit: (id: number) => void;
   onDelete: (id: number) => void;
 };
 
@@ -17,6 +18,7 @@ function ProductCard({
   quantity,
   supplierName,
   isAvailable,
+  onEdit,
   onDelete,
 }: ProductCardProps) {
   return (
@@ -29,6 +31,7 @@ function ProductCard({
       <p>Supplier: {supplierName ?? 'No supplier'}</p>
       <p>Status: {isAvailable ? 'Available' : 'Not available'}</p>
 
+      <button onClick={() => onEdit(id)}>Edit</button>
       <button onClick={() => onDelete(id)}>Delete</button>
     </div>
   );

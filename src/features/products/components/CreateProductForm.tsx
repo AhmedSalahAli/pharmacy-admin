@@ -1,17 +1,49 @@
-import { useState } from 'react';
-import type { CreateProductInput } from '../types/product';
+import { useEffect, useState } from 'react';
+import type { Product, CreateProductInput } from '../types/product';
 
 type CreateProductFormProps = {
   onAddProduct: (product: CreateProductInput) => void;
   isSubmitting: boolean;
+  editingProduct: Product | null;
+  onCancelEdit: () => void;
 };
 
-function CreateProductForm({ onAddProduct, isSubmitting }: CreateProductFormProps) {
+function CreateProductForm({
+  onAddProduct,
+  isSubmitting,
+  editingProduct,
+  onCancelEdit,
+}: CreateProductFormProps) {
   const [name, setName] = useState('');
   const [barcode, setBarcode] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (!editingProduct) {
+      return;
+    }
+
+    setName(editingProduct.name);
+    setBarcode(editingProduct.barcode);
+    setPrice(String(editingProduct.price));
+    setQuantity(String(editingProduct.quantity));
+    setErrorMessage('');
+  }, [editingProduct]);
+
+  function clearForm() {
+    setName('');
+    setBarcode('');
+    setPrice('');
+    setQuantity('');
+    setErrorMessage('');
+  }
+
+  function handleCancelEdit() {
+    clearForm();
+    onCancelEdit();
+  }
 
   function handleSubmit() {
     if (name.trim().length === 0) {
@@ -34,7 +66,7 @@ function CreateProductForm({ onAddProduct, isSubmitting }: CreateProductFormProp
       return;
     }
 
-    const newProduct: CreateProductInput = {
+    const productInput: CreateProductInput = {
       name,
       barcode,
       price: Number(price),
@@ -42,18 +74,14 @@ function CreateProductForm({ onAddProduct, isSubmitting }: CreateProductFormProp
       isAvailable: true,
     };
 
-    onAddProduct(newProduct);
+    onAddProduct(productInput);
 
-    setName('');
-    setBarcode('');
-    setPrice('');
-    setQuantity('');
-    setErrorMessage('');
+    clearForm();
   }
 
   return (
     <div>
-      <h2>Add Product</h2>
+      <h2>{editingProduct ? 'Edit Product' : 'Add Product'}</h2>
 
       {errorMessage && <p>{errorMessage}</p>}
 
@@ -82,8 +110,20 @@ function CreateProductForm({ onAddProduct, isSubmitting }: CreateProductFormProp
       />
 
       <button onClick={handleSubmit} disabled={isSubmitting}>
-        {isSubmitting ? 'Adding...' : 'Add Product'}
+        {isSubmitting
+          ? editingProduct
+            ? 'Saving...'
+            : 'Adding...'
+          : editingProduct
+            ? 'Save Changes'
+            : 'Add Product'}
       </button>
+
+      {editingProduct && (
+        <button onClick={handleCancelEdit} disabled={isSubmitting}>
+          Cancel
+        </button>
+      )}
     </div>
   );
 }

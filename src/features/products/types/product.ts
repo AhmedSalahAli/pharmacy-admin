@@ -28,3 +28,5 @@ export type CreateProductInput = {
   isAvailable: boolean;
   supplierId?: number;
 };
+
+export type UpdateProductInput = Partial<CreateProductInput>;

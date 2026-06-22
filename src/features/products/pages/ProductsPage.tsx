@@ -7,15 +7,23 @@ import {
 
 import ProductCard from '../components/ProductCard';
 import CreateProductForm from '../components/CreateProductForm';
-import type { CreateProductInput } from '../types/product';
+
+import type {
+  Product,
+  CreateProductInput,
+  UpdateProductInput,
+} from '../types/product';
+
 import {
   getProducts,
   createProduct,
+  updateProduct,
   deleteProductById,
 } from '../api/productsApi';
 
 function ProductsPage() {
   const [errorMessage, setErrorMessage] = useState('');
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -40,6 +48,28 @@ function ProductsPage() {
     },
   });
 
+  const updateProductMutation = useMutation({
+    mutationFn: ({
+      id,
+      productInput,
+    }: {
+      id: number;
+      productInput: UpdateProductInput;
+    }) => updateProduct(id, productInput),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['products'],
+      });
+
+      setEditingProduct(null);
+    },
+
+    onError: () => {
+      setErrorMessage('Failed to update product');
+    },
+  });
+
   const deleteProductMutation = useMutation({
     mutationFn: deleteProductById,
     onSuccess: () => {
@@ -52,9 +82,29 @@ function ProductsPage() {
     },
   });
 
-  function addProduct(productInput: CreateProductInput) {
+  function saveProduct(productInput: CreateProductInput) {
     setErrorMessage('');
+
+    if (editingProduct) {
+      updateProductMutation.mutate({
+        id: editingProduct.id,
+        productInput,
+      });
+
+      return;
+    }
+
     createProductMutation.mutate(productInput);
+  }
+
+  function startEditingProduct(id: number) {
+    const selectedProduct = products.find((product) => product.id === id);
+
+    if (!selectedProduct) {
+      return;
+    }
+
+    setEditingProduct(selectedProduct);
   }
 
   function deleteProduct(id: number) {
@@ -86,8 +136,13 @@ function ProductsPage() {
       </div>
 
       <CreateProductForm
-        onAddProduct={addProduct}
-        isSubmitting={createProductMutation.isPending}
+        onAddProduct={saveProduct}
+        isSubmitting={
+          createProductMutation.isPending ||
+          updateProductMutation.isPending
+        }
+        editingProduct={editingProduct}
+        onCancelEdit={() => setEditingProduct(null)}
       />
 
       <hr />
@@ -109,6 +164,7 @@ function ProductsPage() {
             quantity={product.quantity}
             supplierName={product.supplier?.name}
             isAvailable={product.isAvailable}
+            onEdit={startEditingProduct}
             onDelete={deleteProduct}
           />
         ))
