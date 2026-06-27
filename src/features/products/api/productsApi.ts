@@ -4,7 +4,7 @@ import type {
   UpdateProductInput,
 } from '../types/product';
 
-const API_BASE_URL = 'http://localhost:3000';
+import { API_BASE_URL } from '@shared/config/api';
 
 async function handleError(response: Response) {
     const errorBody = await response.json().catch(() => null);
