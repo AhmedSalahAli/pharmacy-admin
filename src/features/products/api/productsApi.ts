@@ -79,6 +79,7 @@ export async function updateProduct(
 
   if (!response.ok) {
     await handleError(response);
+    console.log("Error updating product");
   }
 
   return response.json();

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Product, CreateProductInput } from '../types/product';
+import { useQuery } from '@tanstack/react-query';
+import { getSuppliers } from '../suppliers/api/suppliersApi';
 
 type CreateProductFormProps = {
   onAddProduct: (product: CreateProductInput) => void;
@@ -18,7 +20,13 @@ function CreateProductForm({
   const [barcode, setBarcode] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [supplierId, setSupplierId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ['suppliers'],
+    queryFn: getSuppliers,
+  });
 
   useEffect(() => {
     if (!editingProduct) {
@@ -29,6 +37,9 @@ function CreateProductForm({
     setBarcode(editingProduct.barcode);
     setPrice(String(editingProduct.price));
     setQuantity(String(editingProduct.quantity));
+    setSupplierId(
+      editingProduct.supplierId ? String(editingProduct.supplierId) : '',
+    );
     setErrorMessage('');
   }, [editingProduct]);
 
@@ -37,6 +48,7 @@ function CreateProductForm({
     setBarcode('');
     setPrice('');
     setQuantity('');
+    setSupplierId('');
     setErrorMessage('');
   }
 
@@ -71,6 +83,7 @@ function CreateProductForm({
       barcode,
       price: Number(price),
       quantity: Number(quantity),
+      supplierId: supplierId ? Number(supplierId) : undefined,
       isAvailable: true,
     };
 
@@ -108,6 +121,20 @@ function CreateProductForm({
         value={quantity}
         onChange={(event) => setQuantity(event.target.value)}
       />
+
+    
+      <select
+        value={supplierId}
+        onChange={(event) => setSupplierId(event.target.value)}
+      >
+        <option value="">No supplier</option>
+        {suppliers.map((supplier) => (
+          <option key={supplier.id} value={supplier.id}>
+            {supplier.name}
+          </option>
+        ))}
+
+      </select>
 
       <button onClick={handleSubmit} disabled={isSubmitting}>
         {isSubmitting
