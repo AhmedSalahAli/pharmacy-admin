@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Product, CreateProductInput } from '../types/product';
 import { useQuery } from '@tanstack/react-query';
-import { getSuppliers } from '../suppliers/api/suppliersApi';
+import { getSuppliers } from '../../suppliers/api/suppliersApi';
 
 type CreateProductFormProps = {
   onAddProduct: (product: CreateProductInput) => void;
