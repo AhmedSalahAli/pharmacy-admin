@@ -4,7 +4,8 @@ function Sidebar() {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-logo">
-        Pharmacy
+        <span className="sidebar-logo-full">Pharmacy</span>
+        <span className="sidebar-logo-short">P</span>
       </div>
 
       <nav className="sidebar-nav">
@@ -15,7 +16,8 @@ function Sidebar() {
             isActive ? 'sidebar-link active' : 'sidebar-link'
           }
         >
-          Dashboard
+          <span className="sidebar-link-icon">🏠</span>
+          <span className="sidebar-link-text">Dashboard</span>
         </NavLink>
 
         <NavLink
@@ -24,7 +26,8 @@ function Sidebar() {
             isActive ? 'sidebar-link active' : 'sidebar-link'
           }
         >
-          Products
+          <span className="sidebar-link-icon">📦</span>
+          <span className="sidebar-link-text">Products</span>
         </NavLink>
       </nav>
     </aside>

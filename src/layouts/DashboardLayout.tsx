@@ -2,12 +2,23 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import { useAppStore } from '../store/useAppStore';
 
 import './DashboardLayout.css';
 
 function DashboardLayout() {
+  const sidebarCollapsed = useAppStore(
+    (state) => state.sidebarCollapsed,
+  );
+
   return (
-    <div className="dashboard-layout">
+    <div
+      className={
+        sidebarCollapsed
+          ? 'dashboard-layout sidebar-collapsed'
+          : 'dashboard-layout'
+      }
+    >
       <Sidebar />
 
       <div className="dashboard-main">
