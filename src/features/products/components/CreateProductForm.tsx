@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { Product, CreateProductInput } from '../types/product';
 import { useQuery } from '@tanstack/react-query';
+
+import type { Product, CreateProductInput } from '../types/product';
 import { getSuppliers } from '../../suppliers/api/suppliersApi';
 
 type CreateProductFormProps = {
@@ -93,64 +94,83 @@ function CreateProductForm({
   }
 
   return (
-    <div>
-      <h2>{editingProduct ? 'Edit Product' : 'Add Product'}</h2>
+    <div className="products-form">
+      <h2 className="products-section-title">
+        {editingProduct ? 'Edit Product' : 'Add Product'}
+      </h2>
 
-      {errorMessage && <p>{errorMessage}</p>}
-
-      <input
-        placeholder="Product name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-      />
-
-      <input
-        placeholder="Barcode"
-        value={barcode}
-        onChange={(event) => setBarcode(event.target.value)}
-      />
-
-      <input
-        placeholder="Price"
-        value={price}
-        onChange={(event) => setPrice(event.target.value)}
-      />
-
-      <input
-        placeholder="Quantity"
-        value={quantity}
-        onChange={(event) => setQuantity(event.target.value)}
-      />
-
-    
-      <select
-        value={supplierId}
-        onChange={(event) => setSupplierId(event.target.value)}
-      >
-        <option value="">No supplier</option>
-        {suppliers.map((supplier) => (
-          <option key={supplier.id} value={supplier.id}>
-            {supplier.name}
-          </option>
-        ))}
-
-      </select>
-
-      <button onClick={handleSubmit} disabled={isSubmitting}>
-        {isSubmitting
-          ? editingProduct
-            ? 'Saving...'
-            : 'Adding...'
-          : editingProduct
-            ? 'Save Changes'
-            : 'Add Product'}
-      </button>
-
-      {editingProduct && (
-        <button onClick={handleCancelEdit} disabled={isSubmitting}>
-          Cancel
-        </button>
+      {errorMessage && (
+        <p className="products-message-error">{errorMessage}</p>
       )}
+
+      <div className="products-form-grid">
+        <input
+          className="products-input"
+          placeholder="Product name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+
+        <input
+          className="products-input"
+          placeholder="Barcode"
+          value={barcode}
+          onChange={(event) => setBarcode(event.target.value)}
+        />
+
+        <input
+          className="products-input"
+          placeholder="Price"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+        />
+
+        <input
+          className="products-input"
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(event) => setQuantity(event.target.value)}
+        />
+
+        <select
+          className="products-select"
+          value={supplierId}
+          onChange={(event) => setSupplierId(event.target.value)}
+        >
+          <option value="">No supplier</option>
+          {suppliers.map((supplier) => (
+            <option key={supplier.id} value={supplier.id}>
+              {supplier.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="products-actions">
+        <button
+          className="products-button products-button-primary"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting
+            ? editingProduct
+              ? 'Saving...'
+              : 'Adding...'
+            : editingProduct
+              ? 'Save Changes'
+              : 'Add Product'}
+        </button>
+
+        {editingProduct && (
+          <button
+            className="products-button products-button-secondary"
+            onClick={handleCancelEdit}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </div>
   );
 }
