@@ -1,33 +1,74 @@
-import type { Supplier } from '../types/supplier';
-import { API_BASE_URL } from '@shared/config/api';
+import type {
+  Supplier,
+  CreateSupplierInput,
+  UpdateSupplierInput,
+} from '../types/supplier';
 
-async function handleError(response: Response) {
-  const errorBody = await response.json().catch(() => null);
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  console.error('API Error:', {
-    status: response.status,
-    body: errorBody,
-  });
-
-  throw new Error(
-    errorBody?.message
-      ? JSON.stringify(errorBody.message)
-      : 'API request failed',
-  );
-}
+type SuppliersResponse = {
+  data: Supplier[];
+};
 
 export async function getSuppliers(): Promise<Supplier[]> {
   const response = await fetch(`${API_BASE_URL}/suppliers`);
 
   if (!response.ok) {
-    await handleError(response);
+    throw new Error('Failed to fetch suppliers');
   }
 
-  const result = await response.json();
-
-  if (Array.isArray(result)) {
-    return result;
-  }
+  const result: SuppliersResponse = await response.json();
 
   return result.data;
+}
+
+export async function createSupplier(
+  supplierInput: CreateSupplierInput,
+): Promise<Supplier> {
+  const response = await fetch(`${API_BASE_URL}/suppliers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(supplierInput),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create supplier');
+  }
+
+  return response.json();
+}
+
+export async function updateSupplier(
+  id: number,
+  supplierInput: UpdateSupplierInput,
+): Promise<Supplier> {
+  const response = await fetch(`${API_BASE_URL}/suppliers/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(supplierInput),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update supplier');
+  }
+
+  return response.json();
+}
+
+export async function deleteSupplierById(
+  id: number,
+): Promise<Supplier> {
+  const response = await fetch(`${API_BASE_URL}/suppliers/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete supplier');
+  }
+
+  return response.json();
 }

@@ -22,6 +22,31 @@
   color: #6b7280;
 }
 
+.suppliers-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.suppliers-stat-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.suppliers-stat-label {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.suppliers-stat-value {
+  margin: 8px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
 .suppliers-section {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
@@ -32,6 +57,66 @@
 .suppliers-section-title {
   margin: 0 0 16px;
   font-size: 22px;
+}
+
+.suppliers-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.suppliers-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.suppliers-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background-color: #ffffff;
+}
+
+.suppliers-input:focus {
+  outline: none;
+  border-color: #ea7f0d;
+  box-shadow: 0 0 0 3px rgba(234, 127, 13, 0.15);
+}
+
+.suppliers-actions,
+.supplier-card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.suppliers-button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.suppliers-button-primary {
+  background-color: #ea7f0d;
+  color: #ffffff;
+}
+
+.suppliers-button-secondary {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.suppliers-button-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.suppliers-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .suppliers-message-error {
@@ -53,13 +138,40 @@
   background-color: #ffffff;
 }
 
+.supplier-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
 .supplier-card-title {
   margin: 0;
   font-size: 20px;
 }
 
+.supplier-status {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.supplier-status-available {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.supplier-status-unavailable {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
 .supplier-card-details {
-  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
   color: #374151;
 }
 
@@ -68,7 +180,9 @@
 }
 
 @media (max-width: 900px) {
-  .suppliers-list {
+  .suppliers-stats-grid,
+  .suppliers-list,
+  .suppliers-form-grid {
     grid-template-columns: 1fr;
   }
 }
