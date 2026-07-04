@@ -21,6 +21,8 @@ import {
   deleteProductById,
 } from '../api/productsApi';
 
+import '../products.css';
+
 function ProductsPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -123,52 +125,81 @@ function ProductsPage() {
   }, 0);
 
   return (
-    <div>
-      <h2>Products</h2>
-
-      {errorMessage && <p>{errorMessage}</p>}
-      {isError && <p>Failed to load products</p>}
-
-      <div>
-        <p>Total products: {totalProducts}</p>
-        <p>Total quantity: {totalQuantity}</p>
-        <p>Total inventory value: {totalInventoryValue} EGP</p>
+    <div className="products-page">
+      <div className="products-page-header">
+        <div>
+          <h1 className="products-page-title">Products</h1>
+          <p className="products-page-subtitle">
+            Manage pharmacy products, prices, stock, and suppliers.
+          </p>
+        </div>
       </div>
 
-      <CreateProductForm
-        onAddProduct={saveProduct}
-        isSubmitting={
-          createProductMutation.isPending ||
-          updateProductMutation.isPending
-        }
-        editingProduct={editingProduct}
-        onCancelEdit={() => setEditingProduct(null)}
-      />
-
-      <hr />
-
-      <h3>Products List</h3>
-
-      {isLoading ? (
-        <p>Loading products...</p>
-      ) : products.length === 0 ? (
-        <p>No products found</p>
-      ) : (
-        products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            barcode={product.barcode}
-            price={product.price}
-            quantity={product.quantity}
-            supplierName={product.supplier?.name}
-            isAvailable={product.isAvailable}
-            onEdit={startEditingProduct}
-            onDelete={deleteProduct}
-          />
-        ))
+      {errorMessage && (
+        <p className="products-message-error">{errorMessage}</p>
       )}
+
+      {isError && (
+        <p className="products-message-error">Failed to load products</p>
+      )}
+
+      <div className="products-stats-grid">
+        <div className="products-stat-card">
+          <p className="products-stat-label">Total products</p>
+          <p className="products-stat-value">{totalProducts}</p>
+        </div>
+
+        <div className="products-stat-card">
+          <p className="products-stat-label">Total quantity</p>
+          <p className="products-stat-value">{totalQuantity}</p>
+        </div>
+
+        <div className="products-stat-card">
+          <p className="products-stat-label">Inventory value</p>
+          <p className="products-stat-value">
+            {totalInventoryValue} EGP
+          </p>
+        </div>
+      </div>
+
+      <section className="products-section">
+        <CreateProductForm
+          onAddProduct={saveProduct}
+          isSubmitting={
+            createProductMutation.isPending ||
+            updateProductMutation.isPending
+          }
+          editingProduct={editingProduct}
+          onCancelEdit={() => setEditingProduct(null)}
+        />
+      </section>
+
+      <section className="products-section">
+        <h2 className="products-section-title">Products List</h2>
+
+        {isLoading ? (
+          <p>Loading products...</p>
+        ) : products.length === 0 ? (
+          <p>No products found</p>
+        ) : (
+          <div className="products-list">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                barcode={product.barcode}
+                price={product.price}
+                quantity={product.quantity}
+                supplierName={product.supplier?.name}
+                isAvailable={product.isAvailable}
+                onEdit={startEditingProduct}
+                onDelete={deleteProduct}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -22,18 +22,44 @@ function ProductCard({
   onDelete,
 }: ProductCardProps) {
   return (
-    <div>
-      <h2>{name}</h2>
+    <article className="product-card">
+      <div className="product-card-header">
+        <h3 className="product-card-title">{name}</h3>
 
-      <p>Barcode: {barcode}</p>
-      <p>Price: {price}</p>
-      <p>Quantity: {quantity}</p>
-      <p>Supplier: {supplierName ?? 'No supplier'}</p>
-      <p>Status: {isAvailable ? 'Available' : 'Not available'}</p>
+        <span
+          className={
+            isAvailable
+              ? 'product-status product-status-available'
+              : 'product-status product-status-unavailable'
+          }
+        >
+          {isAvailable ? 'Available' : 'Not available'}
+        </span>
+      </div>
 
-      <button onClick={() => onEdit(id)}>Edit</button>
-      <button onClick={() => onDelete(id)}>Delete</button>
-    </div>
+      <div className="product-card-details">
+        <p>Barcode: {barcode}</p>
+        <p>Price: {price} EGP</p>
+        <p>Quantity: {quantity}</p>
+        <p>Supplier: {supplierName ?? 'No supplier'}</p>
+      </div>
+
+      <div className="product-card-actions">
+        <button
+          className="products-button products-button-secondary"
+          onClick={() => onEdit(id)}
+        >
+          Edit
+        </button>
+
+        <button
+          className="products-button products-button-danger"
+          onClick={() => onDelete(id)}
+        >
+          Delete
+        </button>
+      </div>
+    </article>
   );
 }
 
