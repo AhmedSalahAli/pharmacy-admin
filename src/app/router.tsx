@@ -4,6 +4,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import DashboardHomePage from '../pages/DashboardHomePage';
 import NotFoundPage from '../pages/NotFoundPage';
 import ProductsPage from '../features/products/pages/ProductsPage';
+import SuppliersPage from '../features/suppliers/pages/SuppliersPage';
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: 'products',
         element: <ProductsPage />,
+      },
+      {
+        path: 'suppliers',
+        element: <SuppliersPage />,
       },
       {
         path: '*',

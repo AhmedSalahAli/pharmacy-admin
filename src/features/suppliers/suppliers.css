@@ -1,0 +1,74 @@
+.suppliers-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.suppliers-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.suppliers-page-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.suppliers-page-subtitle {
+  margin: 8px 0 0;
+  color: #6b7280;
+}
+
+.suppliers-section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.suppliers-section-title {
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+
+.suppliers-message-error {
+  margin: 0;
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+.suppliers-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.supplier-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #ffffff;
+}
+
+.supplier-card-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.supplier-card-details {
+  margin-top: 12px;
+  color: #374151;
+}
+
+.supplier-card-details p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .suppliers-list {
+    grid-template-columns: 1fr;
+  }
+}
