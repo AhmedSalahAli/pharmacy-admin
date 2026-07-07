@@ -71,52 +71,10 @@
   gap: 12px;
 }
 
-.suppliers-input {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 10px 12px;
-  background-color: #ffffff;
-}
-
-.suppliers-input:focus {
-  outline: none;
-  border-color: #ea7f0d;
-  box-shadow: 0 0 0 3px rgba(234, 127, 13, 0.15);
-}
-
 .suppliers-actions,
 .supplier-card-actions {
   display: flex;
   gap: 12px;
-}
-
-.suppliers-button {
-  border: 0;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.suppliers-button-primary {
-  background-color: #ea7f0d;
-  color: #ffffff;
-}
-
-.suppliers-button-secondary {
-  background-color: #f3f4f6;
-  color: #111827;
-}
-
-.suppliers-button-danger {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.suppliers-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .suppliers-message-error {
@@ -149,23 +107,6 @@
 .supplier-card-title {
   margin: 0;
   font-size: 20px;
-}
-
-.supplier-status {
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.supplier-status-available {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.supplier-status-unavailable {
-  background-color: #fee2e2;
-  color: #991b1b;
 }
 
 .supplier-card-details {

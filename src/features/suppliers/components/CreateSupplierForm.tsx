@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Button from '../../../components/Button';
+import FormInput from '../../../components/FormInput';
 
 import type {
   Supplier,
@@ -78,28 +80,27 @@ function CreateSupplierForm({
       )}
 
       <div className="suppliers-form-grid">
-        <input
-          className="suppliers-input"
+        <FormInput
           placeholder="Supplier name"
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
 
-        <input
+        <FormInput
           className="suppliers-input"
           placeholder="Phone"
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
         />
 
-        <input
+        <FormInput
           className="suppliers-input"
           placeholder="Email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
 
-        <input
+        <FormInput
           className="suppliers-input"
           placeholder="Address"
           value={address}
@@ -108,7 +109,7 @@ function CreateSupplierForm({
       </div>
 
       <div className="suppliers-actions">
-        <button
+        <Button
           className="suppliers-button suppliers-button-primary"
           onClick={handleSubmit}
           disabled={isSubmitting}
@@ -120,16 +121,16 @@ function CreateSupplierForm({
             : editingSupplier
               ? 'Save Changes'
               : 'Add Supplier'}
-        </button>
+        </Button>
 
         {editingSupplier && (
-          <button
+          <Button
             className="suppliers-button suppliers-button-secondary"
             onClick={handleCancelEdit}
             disabled={isSubmitting}
           >
             Cancel
-          </button>
+          </Button>
         )}
       </div>
     </div>
