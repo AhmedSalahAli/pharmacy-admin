@@ -9,6 +9,7 @@ import {
 import { router } from './app/router';
 
 import './index.css';
+import './shared/shared.css';
 
 const queryClient = new QueryClient();
 

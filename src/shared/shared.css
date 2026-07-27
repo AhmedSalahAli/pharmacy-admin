@@ -1,0 +1,65 @@
+.ui-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.ui-button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ui-button-primary {
+  background-color: #ea7f0d;
+  color: #ffffff;
+}
+
+.ui-button-secondary {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.ui-button-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.ui-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ui-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background-color: #ffffff;
+}
+
+.ui-input:focus {
+  outline: none;
+  border-color: #ea7f0d;
+  box-shadow: 0 0 0 3px rgba(234, 127, 13, 0.15);
+}
+
+.ui-status-badge {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ui-status-badge-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.ui-status-badge-inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}

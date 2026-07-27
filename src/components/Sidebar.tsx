@@ -29,6 +29,17 @@ function Sidebar() {
           <span className="sidebar-link-icon">📦</span>
           <span className="sidebar-link-text">Products</span>
         </NavLink>
+
+        <NavLink
+          to="/suppliers"
+          className={({ isActive }) =>
+            isActive ? 'sidebar-link active' : 'sidebar-link'
+          }
+        >
+          <span className="sidebar-link-icon">🏢</span>
+          <span className="sidebar-link-text">Suppliers</span>
+        </NavLink>
+
       </nav>
     </aside>
   );

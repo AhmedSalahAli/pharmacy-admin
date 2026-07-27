@@ -1,34 +1,15 @@
+import { api } from '@shared/api/http';
+
 import type {
-  Product,
-  CreateProductInput,
-  UpdateProductInput,
+    CreateProductInput,
+    Product,
+    UpdateProductInput,
 } from '../types/product';
 
-import { API_BASE_URL } from '@shared/config/api';
-
-async function handleError(response: Response) {
-    const errorBody = await response.json().catch(() => null);
-
-    console.error('API Error:', {
-        status: response.status,
-        body: errorBody,
-    });
-
-    throw new Error(
-        errorBody?.message
-            ? JSON.stringify(errorBody.message)
-            : 'API request failed',
-    );
-}
-
 export async function getProducts(): Promise<Product[]> {
-    const response = await fetch(`${API_BASE_URL}/products`);
+    const response = await api.get('/products');
 
-    if (!response.ok) {
-        await handleError(response);
-    }
-
-    const result = await response.json();
+    const result = response.data;
 
     if (Array.isArray(result)) {
         return result;
@@ -40,47 +21,23 @@ export async function getProducts(): Promise<Product[]> {
 export async function createProduct(
     productInput: CreateProductInput,
 ): Promise<Product> {
-    const response = await fetch(`${API_BASE_URL}/products`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productInput),
-    });
+    const response = await api.post('/products', productInput);
 
-    if (!response.ok) {
-        await handleError(response);
-    }
-
-    return response.json();
+    return response.data;
 }
 
 export async function deleteProductById(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
-        method: 'DELETE',
-    });
-
-    if (!response.ok) {
-        await handleError(response);
-    }
+    await api.delete(`/products/${id}`);
 }
 
 export async function updateProduct(
-  id: number,
-  productInput: UpdateProductInput,
+    id: number,
+    productInput: UpdateProductInput,
 ): Promise<Product> {
-  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(productInput),
-  });
+    const response = await api.patch(
+        `/products/${id}`,
+        productInput,
+    );
 
-  if (!response.ok) {
-    await handleError(response);
-    console.log("Error updating product");
-  }
-
-  return response.json();
+    return response.data;
 }
