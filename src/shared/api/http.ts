@@ -1,5 +1,12 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config/api';
+import {
+    onRequest,
+} from './request.interceptor';
+import {
+    onResponse,
+    onResponseError,
+} from './response.interceptor';
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
@@ -9,13 +16,9 @@ export const api = axios.create({
     },
 });
 
-api.interceptors.request.use(
-    (config) => {
-        console.log('➡️ Request:', config.method?.toUpperCase(), config.url);
+api.interceptors.request.use(onRequest);
 
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
+api.interceptors.response.use(
+    onResponse,
+    onResponseError,
 );
