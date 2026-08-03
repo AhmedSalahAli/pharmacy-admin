@@ -1,88 +1,35 @@
-import { useState } from 'react';
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
 
-import ProductCard from '../components/ProductCard';
+import { useState } from 'react';
+
 import CreateProductForm from '../components/CreateProductForm';
+import ProductCard from '../components/ProductCard';
 
 import type {
-  Product,
   CreateProductInput,
-  UpdateProductInput,
+  Product
 } from '../types/product';
 
-import {
-  getProducts,
-  createProduct,
-  updateProduct,
-  deleteProductById,
-} from '../api/productsApi';
-
+import { useCreateProduct } from '../hooks/useCreateProduct';
+import { useDeleteProduct } from '../hooks/useDeleteProduct';
+import { useProducts } from '../hooks/useProducts';
+import { useUpdateProduct } from '../hooks/useUpdateProduct';
 import '../products.css';
 
 function ProductsPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  const queryClient = useQueryClient();
 
   const {
-    data: products = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
-  });
+  products,
+  isLoading,
+  isError,
+} = useProducts();
 
-  const createProductMutation = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['products'],
-      });
-    },
-    onError: () => {
-      setErrorMessage('Failed to create product');
-    },
-  });
+const createProductMutation = useCreateProduct();
+const updateProductMutation = useUpdateProduct();
+const deleteProductMutation = useDeleteProduct();
 
-  const updateProductMutation = useMutation({
-    mutationFn: ({
-      id,
-      productInput,
-    }: {
-      id: number;
-      productInput: UpdateProductInput;
-    }) => updateProduct(id, productInput),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['products'],
-      });
-
-      setEditingProduct(null);
-    },
-
-    onError: () => {
-      setErrorMessage('Failed to update product');
-    },
-  });
-
-  const deleteProductMutation = useMutation({
-    mutationFn: deleteProductById,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['products'],
-      });
-    },
-    onError: () => {
-      setErrorMessage('Failed to delete product');
-    },
-  });
 
   function saveProduct(productInput: CreateProductInput) {
     setErrorMessage('');
