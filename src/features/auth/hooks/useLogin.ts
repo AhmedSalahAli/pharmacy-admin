@@ -10,7 +10,7 @@ export function useLogin() {
     mutationFn: login,
 
     onSuccess(data) {
-      loginStore(data.user, data.accessToken);
+      loginStore(data.user, data.accessToken, data.refreshToken);
     },
   });
 }

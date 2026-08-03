@@ -14,3 +14,12 @@ export type LoginResponse = {
   refreshToken: string;
   user: User;
 };
+
+export type RefreshTokenRequest = {
+  refreshToken: string;
+};
+
+export type RefreshTokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
