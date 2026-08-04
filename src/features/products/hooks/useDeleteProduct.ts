@@ -4,18 +4,19 @@ import {
     useQueryClient,
 } from '@tanstack/react-query';
 
-import { deleteProductById } from '../api/productsApi';
+import { productsApi } from '../api/productsApi';
+import { productKeys } from '../kyes/products.keys';
 
 export function useDeleteProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (id: number) =>
-            deleteProductById(id),
+            productsApi.delete(id),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['products'],
+                queryKey: productKeys.all,
             });
         },
     });

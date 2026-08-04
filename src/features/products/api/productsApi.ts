@@ -6,38 +6,43 @@ import type {
     UpdateProductInput,
 } from '../types/product';
 
-export async function getProducts(): Promise<Product[]> {
-    const response = await api.get('/products');
+export const productsApi = {
+    async getAll(): Promise<Product[]> {
+        const response = await api.get('/products');
 
-    const result = response.data;
+        const result = response.data;
 
-    if (Array.isArray(result)) {
-        return result;
-    }
+        if (Array.isArray(result)) {
+            return result;
+        }
 
-    return result.data;
-}
+        return result.data;
+    },
 
-export async function createProduct(
-    productInput: CreateProductInput,
-): Promise<Product> {
-    const response = await api.post('/products', productInput);
+    async create(
+        productInput: CreateProductInput,
+    ): Promise<Product> {
+        const response = await api.post(
+            '/products',
+            productInput,
+        );
 
-    return response.data;
-}
+        return response.data;
+    },
 
-export async function deleteProductById(id: number): Promise<void> {
-    await api.delete(`/products/${id}`);
-}
+    async update(
+        id: number,
+        productInput: UpdateProductInput,
+    ): Promise<Product> {
+        const response = await api.patch(
+            `/products/${id}`,
+            productInput,
+        );
 
-export async function updateProduct(
-    id: number,
-    productInput: UpdateProductInput,
-): Promise<Product> {
-    const response = await api.patch(
-        `/products/${id}`,
-        productInput,
-    );
+        return response.data;
+    },
 
-    return response.data;
-}
+    async delete(id: number): Promise<void> {
+        await api.delete(`/products/${id}`);
+    },
+};

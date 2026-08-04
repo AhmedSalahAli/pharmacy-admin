@@ -1,16 +1,35 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '../api/productsApi';
+
+import { productsApi } from '../api/productsApi';
+import { productKeys } from '../kyes/products.keys';
 
 export function useProducts() {
     const query = useQuery({
-        queryKey: ['products'],
-        queryFn: getProducts,
+        queryKey: productKeys.all,
+        queryFn: productsApi.getAll,
+
+        select: (products) => ({
+            products,
+            totalProducts: products.length,
+            totalQuantity: products.reduce(
+                (sum, product) => sum + product.quantity,
+                0,
+            ),
+            inventoryValue: products.reduce(
+                (sum, product) =>
+                    sum + product.price * product.quantity,
+                0,
+            ),
+        }),
     });
 
     return {
-        products: query.data ?? [],
+        products: query.data?.products ?? [],
+        totalProducts: query.data?.totalProducts ?? 0,
+        totalQuantity: query.data?.totalQuantity ?? 0,
+        inventoryValue: query.data?.inventoryValue ?? 0,
+
         isLoading: query.isLoading,
         isError: query.isError,
-        refetch: query.refetch,
     };
 }

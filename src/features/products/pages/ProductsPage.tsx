@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import CreateProductForm from '../components/CreateProductForm';
@@ -6,48 +5,73 @@ import ProductCard from '../components/ProductCard';
 
 import type {
   CreateProductInput,
-  Product
+  Product,
 } from '../types/product';
 
 import { useCreateProduct } from '../hooks/useCreateProduct';
 import { useDeleteProduct } from '../hooks/useDeleteProduct';
 import { useProducts } from '../hooks/useProducts';
 import { useUpdateProduct } from '../hooks/useUpdateProduct';
-import '../products.css';
+
+import '../style/products.css';
 
 function ProductsPage() {
   const [errorMessage, setErrorMessage] = useState('');
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-
+  const [editingProduct, setEditingProduct] =
+    useState<Product | null>(null);
 
   const {
-  products,
-  isLoading,
-  isError,
-} = useProducts();
+    products,
+    totalProducts,
+    totalQuantity,
+    inventoryValue,
+    isLoading,
+    isError,
+  } = useProducts();
 
-const createProductMutation = useCreateProduct();
-const updateProductMutation = useUpdateProduct();
-const deleteProductMutation = useDeleteProduct();
+  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
+  const deleteProductMutation = useDeleteProduct();
 
-
-  function saveProduct(productInput: CreateProductInput) {
+  function saveProduct(
+    productInput: CreateProductInput,
+  ) {
     setErrorMessage('');
 
     if (editingProduct) {
-      updateProductMutation.mutate({
-        id: editingProduct.id,
-        productInput,
-      });
+      updateProductMutation.mutate(
+        {
+          id: editingProduct.id,
+          productInput,
+        },
+        {
+          onSuccess: () => {
+            setEditingProduct(null);
+          },
+          onError: () => {
+            setErrorMessage(
+              'Failed to update product',
+            );
+          },
+        },
+      );
 
       return;
     }
 
-    createProductMutation.mutate(productInput);
+    createProductMutation.mutate(productInput, {
+      onError: () => {
+        setErrorMessage(
+          'Failed to create product',
+        );
+      },
+    });
   }
 
   function startEditingProduct(id: number) {
-    const selectedProduct = products.find((product) => product.id === id);
+    const selectedProduct = products.find(
+      (product) => product.id === id,
+    );
 
     if (!selectedProduct) {
       return;
@@ -58,53 +82,71 @@ const deleteProductMutation = useDeleteProduct();
 
   function deleteProduct(id: number) {
     setErrorMessage('');
-    deleteProductMutation.mutate(id);
+
+    deleteProductMutation.mutate(id, {
+      onError: () => {
+        setErrorMessage(
+          'Failed to delete product',
+        );
+      },
+    });
   }
-
-  const totalProducts = products.length;
-
-  const totalQuantity = products.reduce((sum, product) => {
-    return sum + product.quantity;
-  }, 0);
-
-  const totalInventoryValue = products.reduce((sum, product) => {
-    return sum + product.price * product.quantity;
-  }, 0);
 
   return (
     <div className="products-page">
       <div className="products-page-header">
         <div>
-          <h1 className="products-page-title">Products</h1>
+          <h1 className="products-page-title">
+            Products
+          </h1>
+
           <p className="products-page-subtitle">
-            Manage pharmacy products, prices, stock, and suppliers.
+            Manage pharmacy products,
+            prices, stock, and suppliers.
           </p>
         </div>
       </div>
 
       {errorMessage && (
-        <p className="products-message-error">{errorMessage}</p>
+        <p className="products-message-error">
+          {errorMessage}
+        </p>
       )}
 
       {isError && (
-        <p className="products-message-error">Failed to load products</p>
+        <p className="products-message-error">
+          Failed to load products
+        </p>
       )}
 
       <div className="products-stats-grid">
         <div className="products-stat-card">
-          <p className="products-stat-label">Total products</p>
-          <p className="products-stat-value">{totalProducts}</p>
-        </div>
+          <p className="products-stat-label">
+            Total products
+          </p>
 
-        <div className="products-stat-card">
-          <p className="products-stat-label">Total quantity</p>
-          <p className="products-stat-value">{totalQuantity}</p>
-        </div>
-
-        <div className="products-stat-card">
-          <p className="products-stat-label">Inventory value</p>
           <p className="products-stat-value">
-            {totalInventoryValue} EGP
+            {totalProducts}
+          </p>
+        </div>
+
+        <div className="products-stat-card">
+          <p className="products-stat-label">
+            Total quantity
+          </p>
+
+          <p className="products-stat-value">
+            {totalQuantity}
+          </p>
+        </div>
+
+        <div className="products-stat-card">
+          <p className="products-stat-label">
+            Inventory value
+          </p>
+
+          <p className="products-stat-value">
+            {inventoryValue} EGP
           </p>
         </div>
       </div>
@@ -117,12 +159,16 @@ const deleteProductMutation = useDeleteProduct();
             updateProductMutation.isPending
           }
           editingProduct={editingProduct}
-          onCancelEdit={() => setEditingProduct(null)}
+          onCancelEdit={() =>
+            setEditingProduct(null)
+          }
         />
       </section>
 
       <section className="products-section">
-        <h2 className="products-section-title">Products List</h2>
+        <h2 className="products-section-title">
+          Products List
+        </h2>
 
         {isLoading ? (
           <p>Loading products...</p>
@@ -138,8 +184,12 @@ const deleteProductMutation = useDeleteProduct();
                 barcode={product.barcode}
                 price={product.price}
                 quantity={product.quantity}
-                supplierName={product.supplier?.name}
-                isAvailable={product.isAvailable}
+                supplierName={
+                  product.supplier?.name
+                }
+                isAvailable={
+                  product.isAvailable
+                }
                 onEdit={startEditingProduct}
                 onDelete={deleteProduct}
               />

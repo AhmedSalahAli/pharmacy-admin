@@ -3,7 +3,8 @@ import {
     useQueryClient,
 } from '@tanstack/react-query';
 
-import { createProduct } from '../api/productsApi';
+import { productsApi } from '../api/productsApi';
+import { productKeys } from '../kyes/products.keys';
 import type { CreateProductInput } from '../types/product';
 
 export function useCreateProduct() {
@@ -11,11 +12,11 @@ export function useCreateProduct() {
 
     return useMutation({
         mutationFn: (product: CreateProductInput) =>
-            createProduct(product),
+            productsApi.create(product),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['products'],
+                queryKey: productKeys.all,
             });
         },
     });

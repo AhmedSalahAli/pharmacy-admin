@@ -2,9 +2,8 @@ import {
     useMutation,
     useQueryClient,
 } from '@tanstack/react-query';
-
-import { updateProduct } from '../api/productsApi';
-
+import { productsApi } from '../api/productsApi';
+import { productKeys } from '../kyes/products.keys';
 import type {
     UpdateProductInput,
 } from '../types/product';
@@ -22,11 +21,11 @@ export function useUpdateProduct() {
             id,
             productInput,
         }: UpdateProductVariables) =>
-            updateProduct(id, productInput),
+            productsApi.update(id, productInput),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['products'],
+                queryKey: productKeys.all,
             });
         },
     });
