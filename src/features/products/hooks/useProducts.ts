@@ -8,6 +8,9 @@ export function useProducts() {
         queryKey: productKeys.all,
         queryFn: productsApi.getAll,
 
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
+
         select: (products) => ({
             products,
             totalProducts: products.length,
